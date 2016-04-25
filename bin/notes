@@ -1,0 +1,35 @@
+# In oldsrc/runClasses.py these are the post processing steps
+
+self.gatherFastq()
+
+# This should be a separate analysis
+self.countUndetIndices()
+
+# This should be a separate analysis
+self.fastQC()
+
+# These are all about copying to the final directory.
+self.calcCheckSums()
+setPermissions(self.finishingDir)
+
+self.copyToFinal()
+setPermissions(self.finalDir)
+self.validateFinalDir()
+
+# Separate analysis
+self.summarizeDemuxResults()
+
+# Hmm - do we still use this?
+self.DBupdate()
+
+#Not sure what this is
+self.warn()
+
+
+# Other things
+
+   -  Need a wrapper script for processIlluminaRun.py that looks for the seqprep.txt (or whatever it is) file for re-running.
+   -  processIlluminaRun.py needs to take an output dir directly for multiple processing runs
+   -  processIlluminaRun.py needs to take a rundir directly for non-standard runs
+
+

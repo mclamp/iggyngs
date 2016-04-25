@@ -1,0 +1,9 @@
+FCID,Lane,SampleID,SampleRef,Index,Description,Control,Recipe,Operator
+70G8NAAXX,1,mPFC S3 H3K4me3,mouse,,SUB00001,N,,Kent
+70G8NAAXX,2,mPFC R4 H3K4me3,mouse,,SUB00001,N,,Kent
+70G8NAAXX,3,C3H4K16AC,mouse,,SUB00001,N,,Kent
+70G8NAAXX,4,NAc S1 H4K16AC,mouse,,SUB00001,N,,Kent
+70G8NAAXX,5,MazeCHR2-input,mouse,,SUB00001,N,,Kent
+70G8NAAXX,6,MazeCHR2+H3.3,mouse,,SUB00001,N,,Kent
+70G8NAAXX,7,MazeCHR-H3.3,mouse,,SUB00001,N,,Kent
+70G8NAAXX,8,JHS 1ug 293t Illumina,human,,SUB00001,N,,Kent
