@@ -9,7 +9,7 @@ class NextSeqBclToFastqAnalysis(BclToFastqAnalysis):
     def __init__(self,runname,samplesheet,rundir,outdir,logdir,basesmask,mismatches,threads,test=True,verbose=True):
         BclToFastqAnalysis.__init__(self,runname,samplesheet,rundir,outdir,logdir,basesmask,mismatches,threads,test,verbose)
 
-    def run(self):  
+    def makeCommands(self):  
         logger    = logging.getLogger('Illumina')
         #self.Run.log('Running bcl2fastq...')
 
@@ -35,6 +35,6 @@ class NextSeqBclToFastqAnalysis(BclToFastqAnalysis):
         outfile = os.path.join(self.logdir,"run."+self.runname+".log")
 
         print command
-
-        if not self.test:
-          self.shell(command, outfile)
+ 
+        self.commands.append(command)
+        self.outfiles.append(outfile)

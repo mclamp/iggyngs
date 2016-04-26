@@ -7,17 +7,17 @@ sys.path.append(scriptdir + "/../src/")
 
 from argparse  import ArgumentParser
 
-from IlluminaRunName                  import IlluminaRunName
+from iggyngs.IlluminaRunName                  import IlluminaRunName
 
-from ioformats.RunInfoFile            import RunInfoFile
+from iggyngs.io.RunInfoFile                   import RunInfoFile
 
-from ioformats.HiSeqSampleSheetFile   import HiSeqSampleSheetFile
-from ioformats.NextSeqSampleSheetFile import NextSeqSampleSheetFile
+from iggyngs.io.HiSeqSampleSheetFile          import HiSeqSampleSheetFile
+from iggyngs.io.NextSeqSampleSheetFile        import NextSeqSampleSheetFile
 
-from HiSeqBclToFastqAnalysis          import HiSeqBclToFastqAnalysis
-from NextSeqBclToFastqAnalysis        import NextSeqBclToFastqAnalysis
+from iggyngs.HiSeqBclToFastqAnalysis          import HiSeqBclToFastqAnalysis
+from iggyngs.NextSeqBclToFastqAnalysis        import NextSeqBclToFastqAnalysis
 
-from IlluminaRunProcessor             import IlluminaRunProcessor
+from iggyngs.IlluminaRunProcessor             import IlluminaRunProcessor
 
 def printArgumentString(args):
     opts = vars(args)
@@ -81,9 +81,11 @@ def run(args):
 
      if irp.runType == "HiSeq":
        bcl2fastq = HiSeqBclToFastqAnalysis(runname,lanessfile,irp.rundir,lanedir,irp.outdir,basesmask,irp.mismatches,irp.cores,irp.test)
+       bcl2fastq.makeCommands()
        bcl2fastq.run()
      elif irp.runType == "NextSeq":
        bcl2fastq = NextSeqBclToFastqAnalysis(runname,lanessfile,irp.rundir,lanedir,irp.outdir,basesmask,irp.mismatches,irp.cores,irp.test)
+       bcl2fastq.makeCommands()
        bcl2fastq.run()
 
      #   Run (if not test)
