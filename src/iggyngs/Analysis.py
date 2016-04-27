@@ -17,16 +17,21 @@ class Analysis(object):
 
     def run(self):
 
-     if not self.test:
          i = 0
          while i < len(self.commands):
+          
             command = self.commands[i]
             outfile = self.outfiles[i]
 
-            self.shell(command, outfile)
-
+            if not self.test:
+              self.shell(command, outfile)
+            else:
+              print "Command : %s"%command
+              print "Outfile : %s"%outfile
+              print "*********** Test mode. not running **************"
+ 
             i = i + 1
-
+    
     @abstractmethod
     def makeCommands(self):
        pass

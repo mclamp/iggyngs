@@ -37,6 +37,7 @@ class Command(object):
                 if s=='': stdoutDone = True
 
                 if s:
+                    print s 
                     i = 0
                     j = s.find('\n')
 

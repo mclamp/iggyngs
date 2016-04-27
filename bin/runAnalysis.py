@@ -10,6 +10,7 @@ from argparse  import ArgumentParser
 from iggyngs.FastQCAnalysis                   import FastQCAnalysis
 from iggyngs.IlluminateAnalysis               import IlluminateAnalysis 
 from iggyngs.CopyDirAnalysis                  import CopyDirAnalysis 
+from iggyngs.TrimmomaticPEAnalysis            import TrimmomaticPEAnalysis 
 
 def printArgumentString(args):
     opts = vars(args)
@@ -36,15 +37,27 @@ def run(args):
 
   
     if analname == "Illuminate":
+
        ana = IlluminateAnalysis(params[0],params[1])
        ana.makeCommands()
        ana.run()
        print ana.data 
+
+    elif analname == "FastQC":
+       ana = FastQCAnalysis(params[0],params[1],"","")
+       ana.makeCommands()
+       ana.run()
+
+    elif analname == "TrimmomaticPE":
+       ana = TrimmomaticPEAnalysis(params[0],params[1],params[2],"","")
+       ana.makeCommands()
+       ana.run()
+
 if __name__ == "__main__":
 
     parser        = ArgumentParser(description = 'Run analysis module')
 
-    parser.add_argument('-a','--analysis'   ,     required=True,   help='Analysis module to run [FastQC,Illuminate,CopyDir]')
+    parser.add_argument('-a','--analysis'   ,        required=True,   help='Analysis module to run [FastQC,Illuminate,TrimmomaticPE]')
     parser.add_argument('-p','--parameters'   ,      required=False,  help="Parameters for the module e.g. 'rundir=mydir,outdir=myout,lane=2'")
     parser.add_argument('-f','--force'      ,        required=False,  help="Force overwrite of any existing output directories [False]", action="store_true")
     parser.add_argument('-t','--test' ,              required=False,  help="Generate the command lines/sample sheets but don't run [True]",action="store_true")
