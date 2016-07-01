@@ -4,11 +4,11 @@ from flask import Flask
 from flask import request
 from flask import current_app
 from flask import render_template
-from flask import session, redirect, url_for, flash
+from flask import session, redirect, url_for, flash, Blueprint
 
-from flask_script import Shell
-
+from flask_script     import Shell
 from flask_sqlalchemy import SQLAlchemy
+from flask_login      import UserMixin,  LoginManager
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -19,6 +19,9 @@ from wtforms.validators import Required
 
 from flask_script       import Manager
 from flask_bootstrap    import Bootstrap
+
+
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app       = Flask(__name__)
 
@@ -31,6 +34,14 @@ db = SQLAlchemy(app)
 
 manager   = Manager(app)
 bootstrap = Bootstrap(app)
+
+
+login_manager = LoginManager()
+login_manager.session_protection = 'strong'
+login_manager.login_view         = 'auth.login'
+
+
+login.manager_init_app(app)
 
 # =====================================================================================
 #
@@ -60,14 +71,27 @@ class Role(db.Model):
     def __repr__(self):
         return '<Role %r>' % self.name
 
-class User(db.Model):
+class User(UserMixin, db.Model):
 
     __tablename__ = 'users'
 
-    id        = db.Column(db.Integer,   primary_key=True)
-    username  = db.Column(db.String(64), unique=True,  index=True)
+    id            = db.Column(db.Integer,   primary_key=True)
+    email         = db.Column(db.String(64), unique=True,index=True)
+    username      = db.Column(db.String(64), unique=True,  index=True)
+    role_id       = db.Column(db.Integer,  db.ForeignKey('roles.id'))
+    password_hash = db.Column(db.String(128))
 
-    role_id   = db.Column(db.Integer,  db.ForeignKey('roles.id'))
+    @property
+    def password(self):
+        raise AttributeError('password is not a readable attribute')
+
+    @password.setter
+    def password(self,password):
+        self.password_hash = generate_password_hash(password)
+
+
+    def verify_password(self,password):
+        return check_password_hash(self.password_hash,password)
     
     def __repr__(self):
         return '<User %r>' % self.username
