@@ -1,19 +1,30 @@
-import subprocess, sys, os, select, filecmp, traceback
+import sys, os, select, filecmp, traceback
 import shutil, errno, re, stat, platform
  
+from subprocess import Popen, PIPE, STDOUT
+
 class Command(object):
+    
+    outstr = []
+    errstr = []
 
     def __init__(self, cmd):
 
         if not cmd or type(cmd) != str:
             raise Exception('Invalid command: %s' % cmd)
 
-        self.p = subprocess.Popen( ['/bin/bash', '-c', cmd],
-                                   shell=False,
-                                   stdin=open('/dev/null', 'r'),
-                                   stdout=subprocess.PIPE,
-                                   stderr=subprocess.PIPE )
+
         self.command = cmd
+
+        self.p = Popen( ['/bin/bash', '-c', cmd],
+                        shell=False,   # Is this cos we're using bash above?
+                        stdin=PIPE,
+                        stdout=PIPE,
+                        stderr=PIPE,
+                        close_fds = True)
+
+
+
         self.pid     = self.p.pid
 
 
@@ -21,46 +32,18 @@ class Command(object):
 
         p = self.p
 
-        BLOCK_SIZE = 4096
+        while p.poll() == None:
 
-        stdoutDone = False
-        stderrDone = False
-        out        = ''
+            (out,err) = p.communicate()
 
-        while not (stdoutDone and stderrDone):  # Be sure to fully iterate this or you will probably leave orphans.
-            rfds, ignored, ignored2 = select.select([p.stdout.fileno(), p.stderr.fileno()], [], [])
+            if out != '':
+                self.outstr.append(out)
 
-            if p.stdout.fileno() in rfds:
 
-                s = os.read(p.stdout.fileno(), BLOCK_SIZE)
+            if err != '':
+                self.errstr.append(err)
 
-                if s=='': stdoutDone = True
 
-                if s:
-                    print s 
-                    i = 0
-                    j = s.find('\n')
+            sys.stdout.flush()
+            sys.stderr.flush()
 
-                    while j!=-1:
-                        yield out + s[i:j+1]
-                        out = ''
-                        i = j+1
-                        j = s.find('\n',i)
-                    out += s[i:]
-
-            if p.stderr.fileno() in rfds:
-                s = os.read(p.stderr.fileno(), BLOCK_SIZE)
-                if s=='': stderrDone = True
-                if s:
-                    i = 0
-                    j = s.find('\n')
-                    while j!=-1:
-                        yield out + s[i:j+1]
-                        out = ''
-                        i = j+1
-                        j = s.find('\n',i)
-                    out += s[i:]
-        if out!='':
-           yield out
-
-        p.wait() 
