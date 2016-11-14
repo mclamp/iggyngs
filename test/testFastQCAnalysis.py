@@ -8,15 +8,15 @@ Created on Apr 25, 2016
 import unittest
 import os, shutil
 
-from iggyngs.FastQCAnalysis import FastQCAnalysis 
+from iggyngs.AnalysisSpecs.FastQCAnalysisSpec import FastQCAnalysisSpec
 
 class Test(unittest.TestCase):
 
     def __init__(self,*args,**kwargs):
         super(Test,self).__init__(*args,**kwargs)
         
-    def testFastQCAnalysis(self):
-        fastqcana = FastQCAnalysis('data/sample_1.fq.gz','testFastQC','.',False)
+    def testFastQCAnalysisSpec(self):
+        fastqcana = FastQCAnalysisSpec('data/sample_1.fq.gz','testFastQC','.',False)
         fastqcana.makeCommands()
         
         fastqcana.run()
@@ -29,7 +29,8 @@ class Test(unittest.TestCase):
 
     def tearDown(self):
         if os.path.exists('testFastQC'):
-          shutil.rmtree('testFastQC')
+          #shutil.rmtree('testFastQC')
+          pass
 
 if __name__ == "__main__":
     unittest.main()

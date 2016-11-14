@@ -1,0 +1,8 @@
+import os
+
+basedir = os.path.abspath(os.path.dirname(__file__))
+
+SQLITE_FILE                    = os.path.join(basedir,'data.sqlite')
+LOGFILE                        = os.path.join(basedir,'iggyngs.log')
+
+logging.basicConfig(filename=LOGFILE,level=logging.INFO)

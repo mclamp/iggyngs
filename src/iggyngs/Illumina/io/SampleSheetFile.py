@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from os import path
-from iggyngs.IlluminaLane import IlluminaLane
+from iggyngs.Illumina.IlluminaLane import IlluminaLane
 
 import re
 
